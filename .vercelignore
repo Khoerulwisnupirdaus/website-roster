@@ -1,0 +1,5 @@
+tests/
+.agents/
+.git/
+.vercel/
+*.md

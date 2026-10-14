@@ -1,0 +1,97 @@
+<!-- 
+  DROP-IN HTML MARKUP FOR WORKER M2
+  File: index.html
+  Placement: Inside <section id="katalog" class="catalog section-padding bg-light">
+             Immediately after <div class="section-header text-center">...</div>
+             and immediately before <div class="catalog-grid">...</div>
+-->
+
+<!-- Catalog Interactive Controls: Search Bar, Category Filter Bar & Live Counter -->
+<div class="catalog-controls" id="catalogControls">
+    <!-- 1. Live Instant Search Input Bar -->
+    <div class="catalog-search-wrap">
+        <div class="catalog-search-box">
+            <i class="fas fa-search search-icon" aria-hidden="true"></i>
+            <input 
+                type="search" 
+                id="catalogSearch" 
+                class="catalog-search-input" 
+                placeholder="Cari motif roster, material (beton / terakota), ukuran 20x20..." 
+                aria-label="Cari motif roster"
+                autocomplete="off"
+                spellcheck="false"
+            >
+            <button type="button" id="catalogSearchClear" class="search-clear-btn" aria-label="Hapus kata kunci pencarian" style="display: none;">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. 6 Category Filter Pills -->
+    <div class="catalog-filter-bar" role="toolbar" aria-label="Filter kategori roster">
+        <div class="filter-pills-wrap" role="group" aria-label="Kategori produk">
+            <button type="button" class="filter-pill filter-btn active" data-filter="all" aria-pressed="true">
+                <span class="pill-dot"></span>
+                <span>Semua</span>
+                <span class="pill-count" data-pill-count="all">37</span>
+            </button>
+            <button type="button" class="filter-pill filter-btn" data-filter="beton" aria-pressed="false">
+                <span class="pill-dot"></span>
+                <span>Beton</span>
+                <span class="pill-count" data-pill-count="beton">34</span>
+            </button>
+            <button type="button" class="filter-pill filter-btn" data-filter="terakota" aria-pressed="false">
+                <span class="pill-dot"></span>
+                <span>Terakota</span>
+                <span class="pill-count" data-pill-count="terakota">4</span>
+            </button>
+            <button type="button" class="filter-pill filter-btn" data-filter="geometris" aria-pressed="false">
+                <span class="pill-dot"></span>
+                <span>Geometris</span>
+                <span class="pill-count" data-pill-count="geometris">26</span>
+            </button>
+            <button type="button" class="filter-pill filter-btn" data-filter="flora" aria-pressed="false">
+                <span class="pill-dot"></span>
+                <span>Flora</span>
+                <span class="pill-count" data-pill-count="flora">6</span>
+            </button>
+            <button type="button" class="filter-pill filter-btn" data-filter="3d" aria-pressed="false">
+                <span class="pill-dot"></span>
+                <span>3D</span>
+                <span class="pill-count" data-pill-count="3d">5</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. Dynamic Result Counter & Active Filter Tag -->
+    <div class="catalog-meta-bar">
+        <div class="catalog-counter result-count" id="resultCount" aria-live="polite">
+            Menampilkan <strong id="visibleCount">37</strong> dari <span id="totalCount">37</span> produk
+        </div>
+        <div class="catalog-active-filter-tag" id="activeFilterTag" style="display: none;">
+            <span class="tag-label">Filter: <strong id="activeFilterName">Semua</strong></span>
+            <button type="button" id="clearFilterBtn" class="tag-clear-btn" aria-label="Hapus filter aktif">&times;</button>
+        </div>
+    </div>
+</div>
+
+<!-- 4. Empty State Container (Displayed when 0 products match search or filter) -->
+<div class="empty-state catalog-empty hidden" id="catalogEmptyState" style="display: none;" role="status">
+    <div class="empty-state-card">
+        <div class="empty-state-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" width="56" height="56">
+                <rect x="10" y="10" width="44" height="44" rx="8" stroke="currentColor" stroke-width="2.5" stroke-dasharray="4 4"/>
+                <path d="M22 22L42 42M42 22L22 42" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <h3 class="empty-state-title">Motif tidak ditemukan</h3>
+        <p class="empty-state-desc">
+            Tidak ada produk roster yang cocok dengan kata kunci &ldquo;<strong id="emptyQueryText"></strong>&rdquo; 
+            pada filter aktif. Silakan coba kata kunci lain atau gunakan tombol reset di bawah.
+        </p>
+        <button type="button" id="resetSearchBtn" class="btn-primary btn-reset btn-reset-catalog">
+            <i class="fas fa-rotate-left" aria-hidden="true"></i>
+            <span>Reset Pencarian &amp; Filter</span>
+        </button>
+    </div>
+</div>

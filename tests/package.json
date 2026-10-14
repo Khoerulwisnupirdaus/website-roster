@@ -1,0 +1,16 @@
+{
+  "name": "roster-cantik-tests",
+  "version": "1.0.0",
+  "description": "Comprehensive Automated Opaque-Box E2E Test Suite for Scarlet Roster Website",
+  "main": "run-tests.js",
+  "scripts": {
+    "test": "node run-tests.js",
+    "test:tier1": "node run-tests.js --tier 1",
+    "test:tier2": "node run-tests.js --tier 2",
+    "test:tier3": "node run-tests.js --tier 3",
+    "test:tier4": "node run-tests.js --tier 4"
+  },
+  "dependencies": {
+    "jsdom": "^26.0.0"
+  }
+}
