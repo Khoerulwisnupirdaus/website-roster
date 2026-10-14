@@ -5,3 +5,5 @@ tests/node_modules/
 .DS_Store
 Thumbs.db
 tests/milestone1-stress-results.json
+
+.vercel

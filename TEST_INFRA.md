@@ -63,7 +63,7 @@ c:\Users\Hype G12\OneDrive\website roster\
   - Live search corner cases: case insensitivity (`BINTANG` vs `bintang`), leading/trailing whitespace trimming (`"   daun   "`), special character sanitization (`.*+?^${}()|[]\\` and HTML injection).
   - Empty state display when zero items match, equipped with working `Reset` button restoring all 37 products.
   - Lightbox modal: Image click activation, title and specs rendering, direct WhatsApp order CTA, close button (`.lightbox-close`), Escape key dismiss, backdrop tap dismiss, and scroll lock (`document.body.style.overflow = 'hidden'`).
-  - WhatsApp order engine: Target number strictly `+62 878 6979 6938` (`6287869796938`), product card URLs contain URI-encoded product parameters, wholesale CTA links to wholesale prefill, floating button links to consultation prefill.
+  - WhatsApp order engine: Target number strictly `+62 831 4959 7892` (`6283149597892`), product card URLs contain URI-encoded product parameters, wholesale CTA links to wholesale prefill, floating button links to consultation prefill.
   - Contact form forwarding (`window.sendToWhatsApp`): HTML5 validation, formatted WhatsApp message creation.
   - FAQ accordion toggle and single-item expansion logic.
 
@@ -75,7 +75,7 @@ c:\Users\Hype G12\OneDrive\website roster\
   - Interactive Wall Calculator:
     - Formula contract: `areaM2 = length * height`, `basePcs = ceil(areaM2 * 25)`, `reservePcs = ceil(basePcs * 0.05)`, `totalPcs = basePcs + reservePcs`.
     - 5 verified scenarios: 4m x 3m (315 pcs), 2.5m x 2m (132 pcs), 1.2m x 2.4m (76 pcs), 10m x 2.5m (657 pcs), 0m x 2m (0 pcs).
-    - 1-click WhatsApp quote generator targeting `6287869796938`.
+    - 1-click WhatsApp quote generator targeting `6283149597892`.
 
 ### Tier 4: Real-World Scenarios, Responsiveness, SEO & Accessibility
 - **Scope**: End-to-end workflows, multi-breakpoint responsiveness, touch target sizes, SEO tags, JSON-LD schemas, alt text, and color contrast.
@@ -85,7 +85,7 @@ c:\Users\Hype G12\OneDrive\website roster\
   - Touch target compliance: Interactive buttons and links meet WCAG minimum 44x44px bounding dimension.
   - Semantic hierarchy: Exactly one `<h1>`, at least 3 `<h2>` section headings.
   - SEO metadata: Meta description (>=30 chars), canonical tag, Open Graph tags (`og:title`, `og:description`, `og:image`, `og:url`, `og:type`), Twitter Card tags.
-  - Structured data: 3 JSON-LD schemas (`LocalBusiness` with Purwakarta 41162 and +6287869796938, `ItemList`/`Product`, `FAQPage`).
+  - Structured data: 3 JSON-LD schemas (`LocalBusiness` with Purwakarta 41162 and +6283149597892, `ItemList`/`Product`, `FAQPage`).
   - 100% media alt text completeness without missing or generic tags.
   - Zero CLS: Explicit aspect-ratio definitions in CSS, explicit height on Google Maps iframe.
   - WCAG 2.1 AA Contrast: Relative luminance analysis verifying `--primary` terracotta contrast ratio against light backgrounds is >= 4.5:1.

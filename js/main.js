@@ -193,7 +193,7 @@ window.sendToWhatsApp = function(event) {
     const product = document.getElementById('waProduct').value;
     const message = document.getElementById('waMessage').value;
 
-    const waNumber = "6287869796938";
+    const waNumber = "6283149597892";
     
     let waText = `Halo Scarlet Roster, saya tertarik dengan produk Anda.\n\n`;
     waText += `*Nama:* ${name}\n`;
@@ -212,7 +212,7 @@ window.handleFleetTracking = function(event) {
     const query = trackInput ? trackInput.value.trim() : '';
     if (!query) return;
 
-    const waNumber = "6287869796938";
+    const waNumber = "6283149597892";
     const waText = `Halo Admin Logistik Scarlet Roster, saya ingin mengecek status pemuatan dan jadwal keberangkatan armada untuk pesanan saya.\n\n*No. Surat Jalan / No. WhatsApp:* ${query}\n\nMohon info estimasi kedatangan armada ke lokasi proyek. Terima kasih.`;
     const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waText)}`;
     window.open(waUrl, '_blank');
@@ -320,7 +320,7 @@ function initRosterCalculator() {
         if (calcTotalPcs) calcTotalPcs.textContent = result.totalPcs + ' pcs';
 
         if (calcWaQuote) {
-            const waNumber = '6287869796938';
+            const waNumber = '6283149597892';
             const msg = `Halo Scarlet Roster, saya sudah hitung kebutuhan-roster untuk dinding panjang ${l}m x tinggi ${h}m (luas ${result.areaM2.toFixed(1)}m²), total estimasi sekitar ${result.totalPcs} pcs. Boleh minta info penawaran harga dan ongkir?`;
             calcWaQuote.href = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
         }

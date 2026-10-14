@@ -184,7 +184,7 @@ function runTier3Tests(harness) {
       // If element exists, test its URL
       if (calcWaBtn) {
         const href = calcWaBtn.getAttribute('href') || '';
-        harness.assertIncludes(href, '6287869796938', 'Calculator WhatsApp quote must target 6287869796938');
+        harness.assertIncludes(href, '6283149597892', 'Calculator WhatsApp quote must target 6283149597892');
       } else {
         // Assert requirement check
         const hasCalcSection = Boolean(document.querySelector('#calculator, #kalkulator, .calculator-section'));

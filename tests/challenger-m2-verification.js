@@ -2,7 +2,7 @@
  * Challenger M2-2 Empirical Verification Test Suite
  * Evaluates:
  * 1. Catalog Data Model Integrity (all 37 products)
- * 2. WhatsApp URL Validation across all 37 product cards (proper encoding, target phone +62 878 6979 6938)
+ * 2. WhatsApp URL Validation across all 37 product cards (proper encoding, target phone +62 831 4959 7892)
  * 3. Lightbox Interactivity for ALL 37 products (modal data binding, dynamic WA order and wholesale CTAs)
  * 4. Lightbox Dismiss Mechanisms (close button, backdrop click, Escape key) & Scroll Lock invariant (hidden <-> '')
  * 5. Adversarial Click Target Isolation (clicks inside modal content must NOT close the modal)
@@ -17,7 +17,7 @@ const { spawn } = require('child_process');
 const { loadDOM, ROOT_DIR } = require('./harness/dom-loader');
 const { TestHarness } = require('./harness/test-harness');
 
-const TARGET_PHONE = '6287869796938';
+const TARGET_PHONE = '6283149597892';
 const harness = new TestHarness();
 
 if (typeof performance !== 'undefined' && !performance.getEntriesByType) {
@@ -606,9 +606,9 @@ async function runChromeE2E() {
           results.push({ name: 'Chrome: Escape key dismisses modal', pass: isClosed3 });
           results.push({ name: 'Chrome: Body overflow restored after Escape key', pass: overflowClosed3 === '', value: overflowClosed3 });
 
-          // Check WhatsApp links targeting 6287869796938
+          // Check WhatsApp links targeting 6283149597892
           const waLinks = Array.from(document.querySelectorAll('a[href*="wa.me"]'));
-          const allTargetOfficial = waLinks.every(a => a.href.includes('6287869796938'));
+          const allTargetOfficial = waLinks.every(a => a.href.includes('6283149597892'));
           results.push({ name: 'Chrome: All WhatsApp links target official phone number', pass: allTargetOfficial, count: waLinks.length });
 
           return results;

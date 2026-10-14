@@ -766,7 +766,7 @@
             `Mohon informasi ketersediaan stok produk ini di pabrik, estimasi waktu kirim ke proyek saya, dan penawaran harga grosirnya. Terima kasih!`;
 
         const encoded = encodeURIComponent(message);
-        btn.href = `https://wa.me/6287869796938?text=${encoded}`;
+        btn.href = `https://wa.me/6283149597892?text=${encoded}`;
     }
 
     /**

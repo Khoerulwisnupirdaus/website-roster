@@ -44,7 +44,7 @@ function runTier4Tests(harness) {
           harness.assert(Boolean(waOrderBtn), 'Lightbox must have direct WhatsApp order CTA');
           if (waOrderBtn) {
             const href = waOrderBtn.getAttribute('href') || '';
-            harness.assertIncludes(href, '6287869796938', 'CTA link must direct to 6287869796938');
+            harness.assertIncludes(href, '6283149597892', 'CTA link must direct to 6283149597892');
           }
 
           // Step 6: Dismiss preview
@@ -247,8 +247,8 @@ function runTier4Tests(harness) {
           if (type === 'HomeAndConstructionBusiness' || type === 'LocalBusiness') {
             foundLocalBusiness = true;
             harness.assert(
-              Boolean(s.telephone && s.telephone.includes('6287869796938')),
-              'LocalBusiness schema telephone must be +6287869796938'
+              Boolean(s.telephone && s.telephone.includes('6283149597892')),
+              'LocalBusiness schema telephone must be +6283149597892'
             );
             harness.assert(
               Boolean(s.address && s.address.addressLocality && s.address.addressLocality.includes('Purwakarta')),

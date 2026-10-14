@@ -6,7 +6,7 @@
  * - Live Instant Search with Debounce & Corner-Case Sanitization
  * - Live Result Count & Empty State with Reset Button
  * - Interactive High-Resolution Lightbox Modal with Technical Specs & WhatsApp CTA
- * - Dynamic WhatsApp Ordering & Wholesale CTA Generators targeting +62 878 6979 6938
+ * - Dynamic WhatsApp Ordering & Wholesale CTA Generators targeting +62 831 4959 7892
  */
 
 // Universal window environment fallback
@@ -14,7 +14,7 @@ if (typeof window === 'undefined') {
   global.window = global;
 }
 
-const WA_PHONE = '6287869796938';
+const WA_PHONE = '6283149597892';
 
 /**
  * Generate contextual WhatsApp product ordering URL

@@ -698,7 +698,7 @@ async function runMilestone2StressTests() {
   harness.describe('Suite 5: Lightbox Modal & WhatsApp Parameters', () => {
     harness.test('5.1: Traversal of All 37 Products in Lightbox Modal', () => {
       const env = createCatalogDOM();
-      const TARGET_PHONE = '6287869796938';
+      const TARGET_PHONE = '6283149597892';
 
       CATALOG_PRODUCTS.forEach(product => {
         // Open lightbox

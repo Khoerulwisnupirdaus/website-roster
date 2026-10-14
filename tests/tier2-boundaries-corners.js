@@ -207,7 +207,7 @@ function runTier2Tests(harness) {
         harness.assert(Boolean(lbWaBtn), 'Lightbox must provide a direct WhatsApp order button');
         if (lbWaBtn) {
           const href = lbWaBtn.getAttribute('href') || '';
-          harness.assertIncludes(href, '6287869796938', 'Lightbox order link must target +62 878 6979 6938');
+          harness.assertIncludes(href, '6283149597892', 'Lightbox order link must target +62 831 4959 7892');
         }
 
         // 2. Dismiss via Escape key
@@ -242,7 +242,7 @@ function runTier2Tests(harness) {
     harness.test('Dynamic WhatsApp Order URLs Formulation and Target Number', () => {
       const { window, document } = loadDOM({ executeScripts: true });
 
-      const TARGET_PHONE = '6287869796938';
+      const TARGET_PHONE = '6283149597892';
 
       // 1. All WhatsApp links on the site
       const allWaLinks = Array.from(document.querySelectorAll('a[href*="wa.me"], a[href*="whatsapp.com"]'));
@@ -293,7 +293,7 @@ function runTier2Tests(harness) {
       harness.assert(Boolean(floatingWa), 'Floating WhatsApp contact button must exist');
       if (floatingWa) {
         const href = floatingWa.getAttribute('href') || '';
-        harness.assertIncludes(href, TARGET_PHONE, 'Floating WhatsApp button must target 6287869796938');
+        harness.assertIncludes(href, TARGET_PHONE, 'Floating WhatsApp button must target 6283149597892');
       }
     });
 
@@ -340,8 +340,8 @@ function runTier2Tests(harness) {
         if (window.lastOpenedUrl) {
           harness.assertIncludes(
             window.lastOpenedUrl,
-            '6287869796938',
-            'Contact form WhatsApp URL must target 6287869796938'
+            '6283149597892',
+            'Contact form WhatsApp URL must target 6283149597892'
           );
           harness.assertIncludes(
             window.lastOpenedUrl,
