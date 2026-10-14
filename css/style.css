@@ -1020,9 +1020,10 @@ h4 {
 }
 
 .product-info .price {
-    font-weight: 600;
-    color: var(--primary);
-    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--secondary);
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
 }
 
 /* Projects */
@@ -1661,11 +1662,6 @@ h4 {
     .price-row .price {
         font-size: 0.72rem;
     }
-    .price-info-trigger {
-        width: 16px;
-        height: 16px;
-        font-size: 9px;
-    }
     .btn-wa-grosir {
         font-size: 0.65rem;
         padding: 5px 10px;
@@ -1744,69 +1740,10 @@ h4 {
 
 .price-row .price {
     margin: 0;
-    color: var(--primary);
-    font-weight: 600;
+    color: var(--secondary);
+    font-weight: 700;
     font-size: 0.95rem;
-}
-
-.price-info-trigger {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: rgba(var(--primary-rgb), 0.1);
-    border: 1px solid rgba(var(--primary-rgb), 0.25);
-    cursor: pointer;
-    font-size: 11px;
-    color: var(--primary);
-    transition: var(--transition);
-    flex-shrink: 0;
-}
-
-.price-info-trigger:hover {
-    background: rgba(var(--primary-rgb), 0.2);
-    transform: scale(1.1);
-}
-
-.price-info-popup {
-    position: absolute;
-    bottom: calc(100% + 8px);
-    left: 0;
-    right: 0;
-    background: linear-gradient(135deg, #2C2C2C 0%, #3a3a3a 100%);
-    color: #fff;
-    padding: 12px 14px;
-    border-radius: 10px;
-    font-size: 0.78rem;
-    line-height: 1.5;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(6px);
-    transition: all 0.25s ease;
-    z-index: 10;
-    pointer-events: none;
-}
-
-.price-info-popup::after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 20px;
-    width: 12px;
-    height: 12px;
-    background: #2C2C2C;
-    transform: rotate(45deg);
-    border-radius: 2px;
-}
-
-.price-info-popup.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: auto;
+    letter-spacing: -0.01em;
 }
 
 /* ===== WA Grosir Button (per card) ===== */

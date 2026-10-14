@@ -218,15 +218,6 @@ window.handleFleetTracking = function(event) {
     window.open(waUrl, '_blank');
 };
 
-// Close price info popups when clicking outside
-document.addEventListener('click', (e) => {
-    if (!e.target.classList.contains('price-info-trigger')) {
-        document.querySelectorAll('.price-info-popup.show').forEach(popup => {
-            popup.classList.remove('show');
-        });
-    }
-});
-
 // ===== Page Loader =====
 function hideLoader() {
     const loader = document.querySelector('.page-loader');
