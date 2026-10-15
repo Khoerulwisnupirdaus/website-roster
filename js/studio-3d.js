@@ -350,6 +350,196 @@
     }
 
     /**
+     * Merge multiple BufferGeometries into a single high-performance geometry
+     */
+    function mergeBufferGeometries(geometries) {
+        if (!geometries || geometries.length === 0) return new THREE.BufferGeometry();
+        if (geometries.length === 1) return geometries[0].clone();
+
+        let totalVertices = 0;
+        let totalIndices = 0;
+
+        for (let i = 0; i < geometries.length; i++) {
+            const g = geometries[i];
+            totalVertices += g.attributes.position.count;
+            if (g.index) totalIndices += g.index.count;
+        }
+
+        const positions = new Float32Array(totalVertices * 3);
+        const normals = new Float32Array(totalVertices * 3);
+        const uvs = new Float32Array(totalVertices * 2);
+        const indices = totalIndices > 0 ? new Uint32Array(totalIndices) : null;
+
+        let posOffset = 0;
+        let normalOffset = 0;
+        let uvOffset = 0;
+        let indexOffset = 0;
+        let vertexOffset = 0;
+
+        for (let i = 0; i < geometries.length; i++) {
+            const g = geometries[i];
+            const pos = g.attributes.position.array;
+            positions.set(pos, posOffset);
+            posOffset += pos.length;
+
+            if (g.attributes.normal) {
+                normals.set(g.attributes.normal.array, normalOffset);
+                normalOffset += g.attributes.normal.array.length;
+            }
+
+            if (g.attributes.uv) {
+                uvs.set(g.attributes.uv.array, uvOffset);
+                uvOffset += g.attributes.uv.array.length;
+            }
+
+            if (g.index && indices) {
+                const idx = g.index.array;
+                for (let j = 0; j < idx.length; j++) {
+                    indices[indexOffset + j] = idx[j] + vertexOffset;
+                }
+                indexOffset += idx.length;
+            }
+
+            vertexOffset += g.attributes.position.count;
+        }
+
+        const merged = new THREE.BufferGeometry();
+        merged.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        merged.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
+        merged.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+        if (indices) merged.setIndex(new THREE.BufferAttribute(indices, 1));
+        merged.computeVertexNormals();
+        return merged;
+    }
+
+    /**
+     * Authentic 1:1 3D Geometry for Roster Hemavara (R01)
+     * Recreates the exact physical acoustic louver baffle blade (slanted center) & 45° angled sills from images/roster_1.jpg
+     */
+    function createAuthenticHemavaraGeometry(width = 0.10, height = 0.20, depth = 0.10) {
+        const hw = width / 2;
+        const hh = height / 2;
+        const hd = depth / 2;
+
+        const rimX = 0.015;
+        const rimY = 0.020;
+        const cavX1 = -hw + rimX; // -0.035
+        const cavX2 = hw - rimX;  // +0.035
+        const cavY1 = -hh + rimY; // -0.080
+        const cavY2 = hh - rimY;  // +0.080
+        const cavH = cavY2 - cavY1; // 0.160m
+
+        const parts = [];
+
+        // 1. Outer bevelled frame with rectangular hollow cavity
+        const frameShape = new THREE.Shape();
+        frameShape.moveTo(-hw, -hh);
+        frameShape.lineTo(hw, -hh);
+        frameShape.lineTo(hw, hh);
+        frameShape.lineTo(-hw, hh);
+        frameShape.closePath();
+
+        const cavityHole = new THREE.Path();
+        const cr = 0.002;
+        cavityHole.moveTo(cavX1 + cr, cavY1);
+        cavityHole.lineTo(cavX2 - cr, cavY1);
+        cavityHole.quadraticCurveTo(cavX2, cavY1, cavX2, cavY1 + cr);
+        cavityHole.lineTo(cavX2, cavY2 - cr);
+        cavityHole.quadraticCurveTo(cavX2, cavY2, cavX2 - cr, cavY2);
+        cavityHole.lineTo(cavX1 + cr, cavY2);
+        cavityHole.quadraticCurveTo(cavX1, cavY2, cavX1, cavY2 - cr);
+        cavityHole.lineTo(cavX1, cavY1 + cr);
+        cavityHole.quadraticCurveTo(cavX1, cavY1, cavX1 + cr, cavY1);
+        cavityHole.closePath();
+        frameShape.holes.push(cavityHole);
+
+        const frameExtrudeSettings = {
+            depth: depth,
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: 0.0025,
+            bevelThickness: 0.0025
+        };
+        const frameGeom = new THREE.ExtrudeGeometry(frameShape, frameExtrudeSettings);
+        frameGeom.center();
+        parts.push(frameGeom);
+
+        // 2. The Angled Acoustic Louver Blade (Sirip Tengah Miring / Slanted Baffle)
+        // Defined in X-Z plane, then extruded along Y and oriented into cavity
+        const bladeShape = new THREE.Shape();
+        const bzFront = hd - 0.003;  // +0.047
+        const bzBack = -hd + 0.003; // -0.047
+
+        // Blade coordinates in X-Z:
+        // Front ridge: x from -0.010 to -0.002
+        // Back edge:   x from -0.010 to +0.016
+        // Right face slopes diagonally: (-0.002, bzFront) to (+0.016, bzBack) -> "yang tengahnya miring"
+        const bx_front_left = -0.010;
+        const bx_front_right = -0.002;
+        const bx_back_left = -0.010;
+        const bx_back_right = +0.016;
+
+        bladeShape.moveTo(bx_front_left, bzFront);
+        bladeShape.lineTo(bx_front_right, bzFront);
+        bladeShape.lineTo(bx_back_right, bzBack);
+        bladeShape.lineTo(bx_back_left, bzBack);
+        bladeShape.closePath();
+
+        const bladeExtrudeSettings = {
+            depth: cavH + 0.002, // slightly overlap into frame sills for clean join
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: 0.0015,
+            bevelThickness: 0.0015
+        };
+        const bladeGeom = new THREE.ExtrudeGeometry(bladeShape, bladeExtrudeSettings);
+        bladeGeom.center();
+        bladeGeom.rotateX(Math.PI / 2);
+        parts.push(bladeGeom);
+
+        // 3. Bottom 45° Acoustic Sill Ramp (Triangular Wedge in Right Slot)
+        const rxStart = bx_front_right;
+        const rxEnd = cavX2;
+        const rw = rxEnd - rxStart;
+
+        const bottomRampShape = new THREE.Shape();
+        bottomRampShape.moveTo(bzFront, cavY1);
+        bottomRampShape.lineTo(0.005, cavY1 + 0.035);
+        bottomRampShape.lineTo(0.005, cavY1);
+        bottomRampShape.closePath();
+
+        const bottomRampGeom = new THREE.ExtrudeGeometry(bottomRampShape, {
+            depth: rw,
+            bevelEnabled: false
+        });
+        bottomRampGeom.rotateY(Math.PI / 2);
+        bottomRampGeom.translate(rxStart, 0, 0);
+        parts.push(bottomRampGeom);
+
+        // 4. Top 45° Acoustic Ceiling Ramp (Triangular Wedge in Right Slot)
+        const topRampShape = new THREE.Shape();
+        topRampShape.moveTo(bzFront, cavY2);
+        topRampShape.lineTo(0.005, cavY2 - 0.035);
+        topRampShape.lineTo(0.005, cavY2);
+        topRampShape.closePath();
+
+        const topRampGeom = new THREE.ExtrudeGeometry(topRampShape, {
+            depth: rw,
+            bevelEnabled: false
+        });
+        topRampGeom.rotateY(Math.PI / 2);
+        topRampGeom.translate(rxStart, 0, 0);
+        parts.push(topRampGeom);
+
+        // 5. Merge all parts into unified geometry
+        const unifiedGeom = mergeBufferGeometries(parts);
+        parts.forEach(p => p.dispose());
+        return unifiedGeom;
+    }
+
+    /**
      * 7. Procedural 3D Void Geometries (Mode Procedural)
      */
     function getBlockGeometry(motifType, customW, customH, customD) {
@@ -362,68 +552,22 @@
             return geometriesMap[cacheKey];
         }
 
-        const halfW = width / 2;
-        const halfH = height / 2;
-
-        const shape = new THREE.Shape();
-        shape.moveTo(-halfW, -halfH);
-        shape.lineTo(halfW, -halfH);
-        shape.lineTo(halfW, halfH);
-        shape.lineTo(-halfW, halfH);
-        shape.closePath();
-
         switch (motifType) {
             case 'hemavara':
             case 'R01': {
-                // Roster Hemavara (R01): Authentic acoustic vertical dual-slot breeze block
-                // Proportions modeled 1:1 from physical sample images/roster_1.jpg:
-                // Nominal 100mm x 200mm x 100mm (or scaled to width x height)
-                // Left & right rim side thickness: ~16mm (0.16 of width)
-                // Top & bottom sill thickness: ~22mm (0.11 of height)
-                // Central vertical baffle fin: ~14mm (0.14 of width)
-                const rimX = width * 0.16;
-                const rimY = height * 0.11;
-                const finW = width * 0.14;
-                const r = 0.003; // 3mm fillet radius
-
-                const yBottom = -halfH + rimY;
-                const yTop = halfH - rimY;
-
-                // Left acoustic slot
-                const lx1 = -halfW + rimX;
-                const lx2 = -finW / 2;
-                const leftHole = new THREE.Path();
-                leftHole.moveTo(lx1 + r, yBottom);
-                leftHole.lineTo(lx2 - r, yBottom);
-                leftHole.quadraticCurveTo(lx2, yBottom, lx2, yBottom + r);
-                leftHole.lineTo(lx2, yTop - r);
-                leftHole.quadraticCurveTo(lx2, yTop, lx2 - r, yTop);
-                leftHole.lineTo(lx1 + r, yTop);
-                leftHole.quadraticCurveTo(lx1, yTop, lx1, yTop - r);
-                leftHole.lineTo(lx1, yBottom + r);
-                leftHole.quadraticCurveTo(lx1, yBottom, lx1 + r, yBottom);
-                leftHole.closePath();
-                shape.holes.push(leftHole);
-
-                // Right acoustic slot
-                const rx1 = finW / 2;
-                const rx2 = halfW - rimX;
-                const rightHole = new THREE.Path();
-                rightHole.moveTo(rx1 + r, yBottom);
-                rightHole.lineTo(rx2 - r, yBottom);
-                rightHole.quadraticCurveTo(rx2, yBottom, rx2, yBottom + r);
-                rightHole.lineTo(rx2, yTop - r);
-                rightHole.quadraticCurveTo(rx2, yTop, rx2 - r, yTop);
-                rightHole.lineTo(rx2, yTop);
-                rightHole.lineTo(rx1 + r, yTop);
-                rightHole.quadraticCurveTo(rx1, yTop, rx1, yTop - r);
-                rightHole.lineTo(rx1, yBottom + r);
-                rightHole.quadraticCurveTo(rx1, yBottom, rx1 + r, yBottom);
-                rightHole.closePath();
-                shape.holes.push(rightHole);
-                break;
+                const geom = createAuthenticHemavaraGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
             }
             case 'square': {
+                const halfW = width / 2;
+                const halfH = height / 2;
+                const shape = new THREE.Shape();
+                shape.moveTo(-halfW, -halfH);
+                shape.lineTo(halfW, -halfH);
+                shape.lineTo(halfW, halfH);
+                shape.lineTo(-halfW, halfH);
+                shape.closePath();
                 const v = 0.065;
                 const hole = new THREE.Path();
                 hole.moveTo(-v, -v);
