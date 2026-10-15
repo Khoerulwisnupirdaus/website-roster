@@ -540,6 +540,197 @@
     }
 
     /**
+     * Authentic 1:1 3D Geometry for Roster Lingkaran Retro (R05)
+     * Recreates the funnel-chamfer circular tunnel breeze block from images/roster_5.jpg
+     */
+    function createAuthenticLingkaranRetroGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.006;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh);
+        shape.lineTo(hw, -hh);
+        shape.lineTo(hw, hh);
+        shape.lineTo(-hw, hh);
+        shape.closePath();
+
+        // Central circular tunnel through-hole
+        const hole = new THREE.Path();
+        hole.absarc(0, 0, 0.062, 0, Math.PI * 2, true);
+        shape.holes.push(hole);
+
+        const extrudeSettings = {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 3,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        };
+        const geom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * Authentic 1:1 3D Geometry for Roster Kotak 4 Lubang (R11)
+     * Recreates the Bauhaus 4-square geometric breeze block from images/roster_11.png
+     */
+    function createAuthenticKotak4Geometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh);
+        shape.lineTo(hw, -hh);
+        shape.lineTo(hw, hh);
+        shape.lineTo(-hw, hh);
+        shape.closePath();
+
+        const holeHalf = 0.027; // 5.4cm square void
+        const r = 0.004; // 4mm fillet radius
+        const offsets = [-0.046, 0.046];
+
+        offsets.forEach(cx => {
+            offsets.forEach(cy => {
+                const hole = new THREE.Path();
+                const x1 = cx - holeHalf, x2 = cx + holeHalf;
+                const y1 = cy - holeHalf, y2 = cy + holeHalf;
+                hole.moveTo(x1 + r, y1);
+                hole.lineTo(x2 - r, y1);
+                hole.quadraticCurveTo(x2, y1, x2, y1 + r);
+                hole.lineTo(x2, y2 - r);
+                hole.quadraticCurveTo(x2, y2, x2 - r, y2);
+                hole.lineTo(x1 + r, y2);
+                hole.quadraticCurveTo(x1, y2, x1, y2 - r);
+                hole.lineTo(x1, y1 + r);
+                hole.quadraticCurveTo(x1, y1, x1 + r, y1);
+                hole.closePath();
+                shape.holes.push(hole);
+            });
+        });
+
+        const extrudeSettings = {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        };
+        const geom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * Authentic 1:1 3D Geometry for Roster Silang Diagonal (R07)
+     * Recreates the diagonal acoustic baffle bar with triangular through-voids from images/roster_7.jpg
+     */
+    function createAuthenticSilangGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh);
+        shape.lineTo(hw, -hh);
+        shape.lineTo(hw, hh);
+        shape.lineTo(-hw, hh);
+        shape.closePath();
+
+        const rim = 0.024;
+        const barHalf = 0.016; // 3.2cm diagonal acoustic bar
+        const xMin = -hw + rim, xMax = hw - rim;
+        const yMin = -hh + rim, yMax = hh - rim;
+
+        // Top-Left Triangular Void
+        const holeTL = new THREE.Path();
+        holeTL.moveTo(xMin, yMin + (barHalf * 2.8));
+        holeTL.lineTo(xMin, yMax);
+        holeTL.lineTo(xMax - (barHalf * 2.8), yMax);
+        holeTL.lineTo(xMin, yMin + (barHalf * 2.8));
+        holeTL.closePath();
+        shape.holes.push(holeTL);
+
+        // Bottom-Right Triangular Void
+        const holeBR = new THREE.Path();
+        holeBR.moveTo(xMin + (barHalf * 2.8), yMin);
+        holeBR.lineTo(xMax, yMin);
+        holeBR.lineTo(xMax, yMax - (barHalf * 2.8));
+        holeBR.lineTo(xMin + (barHalf * 2.8), yMin);
+        holeBR.closePath();
+        shape.holes.push(holeBR);
+
+        const extrudeSettings = {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        };
+        const geom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * Authentic 1:1 3D Geometry for Roster Kotak Polos (R27)
+     * Recreates the modern large-aperture single square void
+     */
+    function createAuthenticKotakPolosGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh);
+        shape.lineTo(hw, -hh);
+        shape.lineTo(hw, hh);
+        shape.lineTo(-hw, hh);
+        shape.closePath();
+
+        const holeHalf = 0.065; // 13x13cm opening
+        const r = 0.006;
+        const hole = new THREE.Path();
+        const x1 = -holeHalf, x2 = holeHalf;
+        const y1 = -holeHalf, y2 = holeHalf;
+        hole.moveTo(x1 + r, y1);
+        hole.lineTo(x2 - r, y1);
+        hole.quadraticCurveTo(x2, y1, x2, y1 + r);
+        hole.lineTo(x2, y2 - r);
+        hole.quadraticCurveTo(x2, y2, x2 - r, y2);
+        hole.lineTo(x1 + r, y2);
+        hole.quadraticCurveTo(x1, y2, x1, y2 - r);
+        hole.lineTo(x1, y1 + r);
+        hole.quadraticCurveTo(x1, y1, x1 + r, y1);
+        hole.closePath();
+        shape.holes.push(hole);
+
+        const extrudeSettings = {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        };
+        const geom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * Registry of products with Authentic 1:1 Physical 3D Void Geometries
+     */
+    const PRECISION_3D_REGISTRY = {
+        'R01': { geomKey: 'hemavara', width: 0.10, height: 0.20, depth: 0.10, defaultMat: 'terracotta' },
+        'R05': { geomKey: 'lingkaran_retro', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' },
+        'R07': { geomKey: 'silang_diagonal', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'terracotta' },
+        'R11': { geomKey: 'kotak_4', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R27': { geomKey: 'kotak_polos', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' }
+    };
+
+    /**
      * 7. Procedural 3D Void Geometries (Mode Procedural)
      */
     function getBlockGeometry(motifType, customW, customH, customD) {
@@ -556,6 +747,30 @@
             case 'hemavara':
             case 'R01': {
                 const geom = createAuthenticHemavaraGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'lingkaran_retro':
+            case 'R05': {
+                const geom = createAuthenticLingkaranRetroGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'kotak_4':
+            case 'R11': {
+                const geom = createAuthenticKotak4Geometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'silang_diagonal':
+            case 'R07': {
+                const geom = createAuthenticSilangGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'kotak_polos':
+            case 'R27': {
+                const geom = createAuthenticKotakPolosGeometry(width, height, depth);
                 geometriesMap[cacheKey] = geom;
                 return geom;
             }
@@ -708,11 +923,13 @@
             instancedWallMesh = null;
         }
 
-        const isHemavara = STATE.selectedProduct && (STATE.selectedProduct.id === 'R01' || (STATE.selectedProduct.name && STATE.selectedProduct.name.toLowerCase().includes('hemavara')));
+        const precisionConfig = (STATE.mode === 'catalog' && STATE.selectedProduct)
+            ? PRECISION_3D_REGISTRY[STATE.selectedProduct.id]
+            : null;
 
-        const blockW = isHemavara ? 0.10 : (STATE.blockWidth || STATE.blockSize);
-        const blockH = isHemavara ? 0.20 : (STATE.blockHeight || STATE.blockSize);
-        const blockD = STATE.blockDepth || 0.10;
+        const blockW = precisionConfig ? precisionConfig.width : (STATE.blockWidth || STATE.blockSize);
+        const blockH = precisionConfig ? precisionConfig.height : (STATE.blockHeight || STATE.blockSize);
+        const blockD = precisionConfig ? precisionConfig.depth : (STATE.blockDepth || 0.10);
 
         const pitchX = blockW + STATE.mortarGap;
         const pitchY = blockH + STATE.mortarGap;
@@ -722,10 +939,10 @@
 
         let geometry, material;
 
-        if (isHemavara) {
-            // Physical 3D Void Extrusion Model for Hemavara (True to physical sample images/roster_1.jpg)
-            geometry = getBlockGeometry('hemavara', blockW, blockH, blockD);
-            material = materialsMap[STATE.currentMaterial] || materialsMap.terracotta;
+        if (precisionConfig) {
+            // Authentic 1:1 Physical 3D Void Extrusion Model
+            geometry = getBlockGeometry(precisionConfig.geomKey, blockW, blockH, blockD);
+            material = materialsMap[STATE.currentMaterial] || materialsMap[precisionConfig.defaultMat] || materialsMap.concrete;
         } else if (STATE.mode === 'catalog' && STATE.selectedProduct) {
             // Real Catalog Product Mode: Texture mapped with authentic product photo
             geometry = new THREE.BoxGeometry(blockW, blockH, blockD);
@@ -845,7 +1062,7 @@
             card.className = `catalog-product-card-3d ${isActive ? 'active' : ''}`;
             card.setAttribute('data-id', product.id);
 
-            const isPrecision3D = product.id === 'R01';
+            const isPrecision3D = Boolean(PRECISION_3D_REGISTRY[product.id]);
             const badge3D = isPrecision3D ? 
                 `<span style="display:inline-block; margin-top:3px; background:rgba(37, 211, 102, 0.18); color:#22C55E; font-size:0.65rem; padding:1px 6px; border-radius:3px; font-weight:700;"><i class="fa-solid fa-cube"></i> Model 3D Presisi</span>` : '';
 
@@ -879,13 +1096,13 @@
         STATE.selectedProduct = product;
         STATE.selectedProductId = product.id;
 
-        const isHemavara = product.id === 'R01' || (product.name && product.name.toLowerCase().includes('hemavara'));
+        const precisionConfig = PRECISION_3D_REGISTRY[product.id];
 
-        if (isHemavara) {
-            STATE.blockWidth = 0.10;
-            STATE.blockHeight = 0.20;
-            STATE.blockDepth = 0.10;
-            STATE.currentMaterial = 'terracotta';
+        if (precisionConfig) {
+            STATE.blockWidth = precisionConfig.width;
+            STATE.blockHeight = precisionConfig.height;
+            STATE.blockDepth = precisionConfig.depth;
+            STATE.currentMaterial = precisionConfig.defaultMat;
         } else {
             STATE.blockWidth = STATE.blockSize;
             STATE.blockHeight = STATE.blockSize;
