@@ -17,11 +17,13 @@
         wallWidth: 3.0,       // meters (1.0m to 6.0m)
         wallHeight: 2.2,      // meters (1.0m to 3.6m)
         blockSize: 0.20,      // 20cm standard roster
+        blockWidth: 0.10,     // 10cm physical width for Hemavara (or 20cm default)
+        blockHeight: 0.20,    // 20cm physical height
         blockDepth: 0.10,     // 10cm depth
         mortarGap: 0.008,     // 8mm architectural joint
-        bondType: 'stack',    // 'stack' or 'running'
-        currentMotif: 'square', // for procedural mode
-        currentMaterial: 'concrete', // concrete, terracotta, white, charcoal
+        bondType: 'running',  // 'running' (bata silang) or 'stack'
+        currentMotif: 'hemavara', // for procedural mode
+        currentMaterial: 'terracotta', // concrete, terracotta, white, charcoal
         
         // Solar light configuration
         azimuth: 55,          // degrees
@@ -79,6 +81,10 @@
         if (window.CATALOG_PRODUCTS && window.CATALOG_PRODUCTS.length > 0) {
             STATE.selectedProduct = window.CATALOG_PRODUCTS[0];
             STATE.selectedProductId = STATE.selectedProduct.id;
+            STATE.blockWidth = 0.10;
+            STATE.blockHeight = 0.20;
+            STATE.blockDepth = 0.10;
+            STATE.currentMaterial = 'terracotta';
         }
 
         // Texture Loader
@@ -346,23 +352,77 @@
     /**
      * 7. Procedural 3D Void Geometries (Mode Procedural)
      */
-    function getBlockGeometry(motifType) {
-        if (geometriesMap[motifType]) {
-            return geometriesMap[motifType];
+    function getBlockGeometry(motifType, customW, customH, customD) {
+        const width = customW || STATE.blockWidth || STATE.blockSize;
+        const height = customH || STATE.blockHeight || STATE.blockSize;
+        const depth = customD || STATE.blockDepth || 0.10;
+        const cacheKey = `${motifType}_${width.toFixed(3)}_${height.toFixed(3)}_${depth.toFixed(3)}`;
+
+        if (geometriesMap[cacheKey]) {
+            return geometriesMap[cacheKey];
         }
 
-        const size = STATE.blockSize;
-        const half = size / 2;
-        const depth = STATE.blockDepth;
+        const halfW = width / 2;
+        const halfH = height / 2;
 
         const shape = new THREE.Shape();
-        shape.moveTo(-half, -half);
-        shape.lineTo(half, -half);
-        shape.lineTo(half, half);
-        shape.lineTo(-half, half);
+        shape.moveTo(-halfW, -halfH);
+        shape.lineTo(halfW, -halfH);
+        shape.lineTo(halfW, halfH);
+        shape.lineTo(-halfW, halfH);
         shape.closePath();
 
         switch (motifType) {
+            case 'hemavara':
+            case 'R01': {
+                // Roster Hemavara (R01): Authentic acoustic vertical dual-slot breeze block
+                // Proportions modeled 1:1 from physical sample images/roster_1.jpg:
+                // Nominal 100mm x 200mm x 100mm (or scaled to width x height)
+                // Left & right rim side thickness: ~16mm (0.16 of width)
+                // Top & bottom sill thickness: ~22mm (0.11 of height)
+                // Central vertical baffle fin: ~14mm (0.14 of width)
+                const rimX = width * 0.16;
+                const rimY = height * 0.11;
+                const finW = width * 0.14;
+                const r = 0.003; // 3mm fillet radius
+
+                const yBottom = -halfH + rimY;
+                const yTop = halfH - rimY;
+
+                // Left acoustic slot
+                const lx1 = -halfW + rimX;
+                const lx2 = -finW / 2;
+                const leftHole = new THREE.Path();
+                leftHole.moveTo(lx1 + r, yBottom);
+                leftHole.lineTo(lx2 - r, yBottom);
+                leftHole.quadraticCurveTo(lx2, yBottom, lx2, yBottom + r);
+                leftHole.lineTo(lx2, yTop - r);
+                leftHole.quadraticCurveTo(lx2, yTop, lx2 - r, yTop);
+                leftHole.lineTo(lx1 + r, yTop);
+                leftHole.quadraticCurveTo(lx1, yTop, lx1, yTop - r);
+                leftHole.lineTo(lx1, yBottom + r);
+                leftHole.quadraticCurveTo(lx1, yBottom, lx1 + r, yBottom);
+                leftHole.closePath();
+                shape.holes.push(leftHole);
+
+                // Right acoustic slot
+                const rx1 = finW / 2;
+                const rx2 = halfW - rimX;
+                const rightHole = new THREE.Path();
+                rightHole.moveTo(rx1 + r, yBottom);
+                rightHole.lineTo(rx2 - r, yBottom);
+                rightHole.quadraticCurveTo(rx2, yBottom, rx2, yBottom + r);
+                rightHole.lineTo(rx2, yTop - r);
+                rightHole.quadraticCurveTo(rx2, yTop, rx2 - r, yTop);
+                rightHole.lineTo(rx2, yTop);
+                rightHole.lineTo(rx1 + r, yTop);
+                rightHole.quadraticCurveTo(rx1, yTop, rx1, yTop - r);
+                rightHole.lineTo(rx1, yBottom + r);
+                rightHole.quadraticCurveTo(rx1, yBottom, rx1 + r, yBottom);
+                rightHole.closePath();
+                shape.holes.push(rightHole);
+                break;
+            }
             case 'square': {
                 const v = 0.065;
                 const hole = new THREE.Path();
@@ -490,7 +550,7 @@
 
         const geom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
         geom.center();
-        geometriesMap[motifType] = geom;
+        geometriesMap[cacheKey] = geom;
         return geom;
     }
 
@@ -504,16 +564,27 @@
             instancedWallMesh = null;
         }
 
-        const blockPitch = STATE.blockSize + STATE.mortarGap;
-        const cols = Math.max(2, Math.round(STATE.wallWidth / blockPitch));
-        const rows = Math.max(2, Math.round(STATE.wallHeight / blockPitch));
+        const isHemavara = STATE.selectedProduct && (STATE.selectedProduct.id === 'R01' || (STATE.selectedProduct.name && STATE.selectedProduct.name.toLowerCase().includes('hemavara')));
+
+        const blockW = isHemavara ? 0.10 : (STATE.blockWidth || STATE.blockSize);
+        const blockH = isHemavara ? 0.20 : (STATE.blockHeight || STATE.blockSize);
+        const blockD = STATE.blockDepth || 0.10;
+
+        const pitchX = blockW + STATE.mortarGap;
+        const pitchY = blockH + STATE.mortarGap;
+        const cols = Math.max(2, Math.round(STATE.wallWidth / pitchX));
+        const rows = Math.max(2, Math.round(STATE.wallHeight / pitchY));
         const totalCount = cols * rows;
 
         let geometry, material;
 
-        if (STATE.mode === 'catalog' && STATE.selectedProduct) {
+        if (isHemavara) {
+            // Physical 3D Void Extrusion Model for Hemavara (True to physical sample images/roster_1.jpg)
+            geometry = getBlockGeometry('hemavara', blockW, blockH, blockD);
+            material = materialsMap[STATE.currentMaterial] || materialsMap.terracotta;
+        } else if (STATE.mode === 'catalog' && STATE.selectedProduct) {
             // Real Catalog Product Mode: Texture mapped with authentic product photo
-            geometry = new THREE.BoxGeometry(STATE.blockSize, STATE.blockSize, STATE.blockDepth);
+            geometry = new THREE.BoxGeometry(blockW, blockH, blockD);
             const tex = getProductTexture(STATE.selectedProduct.image);
 
             // Determine matching side edge material
@@ -532,7 +603,7 @@
             material = [sideMat, sideMat, sideMat, sideMat, frontBackMat, frontBackMat];
         } else {
             // Procedural 3D Void Extrusion Mode
-            geometry = getBlockGeometry(STATE.currentMotif);
+            geometry = getBlockGeometry(STATE.currentMotif, blockW, blockH, blockD);
             material = materialsMap[STATE.currentMaterial] || materialsMap.concrete;
         }
 
@@ -546,17 +617,17 @@
         const quaternion = new THREE.Quaternion();
         const scale = new THREE.Vector3(1, 1, 1);
 
-        const totalWidth = cols * blockPitch;
+        const totalWidth = cols * pitchX;
         const halfWidth = totalWidth / 2;
         let idx = 0;
 
         for (let r = 0; r < rows; r++) {
-            const yPos = (r * blockPitch) + (STATE.blockSize / 2) + 0.08;
+            const yPos = (r * pitchY) + (blockH / 2) + 0.08;
             const isOddRow = r % 2 === 1;
-            const rowShift = (STATE.bondType === 'running' && isOddRow) ? (blockPitch / 2) : 0;
+            const rowShift = (STATE.bondType === 'running' && isOddRow) ? (pitchX / 2) : 0;
 
             for (let c = 0; c < cols; c++) {
-                const xPos = (c * blockPitch) - halfWidth + (STATE.blockSize / 2) + rowShift;
+                const xPos = (c * pitchX) - halfWidth + (blockW / 2) + rowShift;
                 const zPos = 0;
 
                 position.set(xPos, yPos, zPos);
@@ -572,7 +643,7 @@
         scene.add(instancedWallMesh);
 
         // Update Spec Calculations
-        calculateSpecifications(cols, rows);
+        calculateSpecifications(cols, rows, blockW, blockH);
     }
 
     /**
@@ -630,12 +701,16 @@
             card.className = `catalog-product-card-3d ${isActive ? 'active' : ''}`;
             card.setAttribute('data-id', product.id);
 
+            const isPrecision3D = product.id === 'R01';
+            const badge3D = isPrecision3D ? 
+                `<span style="display:inline-block; margin-top:3px; background:rgba(37, 211, 102, 0.18); color:#22C55E; font-size:0.65rem; padding:1px 6px; border-radius:3px; font-weight:700;"><i class="fa-solid fa-cube"></i> Model 3D Presisi</span>` : '';
+
             card.innerHTML = `
                 <div class="catalog-thumb-wrap">
                     <img src="${product.image}" alt="${product.name}" class="catalog-thumb-img" loading="lazy">
                     <span class="catalog-thumb-badge">${product.id}</span>
                 </div>
-                <div class="catalog-card-title" title="${product.name}">${product.name}</div>
+                <div class="catalog-card-title" title="${product.name}">${product.name} ${badge3D}</div>
                 <div class="catalog-card-meta-row">
                     <span class="catalog-card-mat" title="${product.material}">${product.material}</span>
                     <span class="catalog-card-price">${product.priceFormatted.replace(' / pcs', '')}</span>
@@ -660,17 +735,30 @@
         STATE.selectedProduct = product;
         STATE.selectedProductId = product.id;
 
-        // Auto-detect material finishing
-        const mat = (product.material || '').toLowerCase();
-        const cat = (product.category || '').toLowerCase();
-        if (cat.includes('terakota') || mat.includes('terracotta') || mat.includes('terakota')) {
+        const isHemavara = product.id === 'R01' || (product.name && product.name.toLowerCase().includes('hemavara'));
+
+        if (isHemavara) {
+            STATE.blockWidth = 0.10;
+            STATE.blockHeight = 0.20;
+            STATE.blockDepth = 0.10;
             STATE.currentMaterial = 'terracotta';
-        } else if (mat.includes('putih')) {
-            STATE.currentMaterial = 'white';
-        } else if (mat.includes('charcoal') || mat.includes('hitam')) {
-            STATE.currentMaterial = 'charcoal';
         } else {
-            STATE.currentMaterial = 'concrete';
+            STATE.blockWidth = STATE.blockSize;
+            STATE.blockHeight = STATE.blockSize;
+            STATE.blockDepth = 0.10;
+
+            // Auto-detect material finishing
+            const mat = (product.material || '').toLowerCase();
+            const cat = (product.category || '').toLowerCase();
+            if (cat.includes('terakota') || mat.includes('terracotta') || mat.includes('terakota')) {
+                STATE.currentMaterial = 'terracotta';
+            } else if (mat.includes('putih')) {
+                STATE.currentMaterial = 'white';
+            } else if (mat.includes('charcoal') || mat.includes('hitam')) {
+                STATE.currentMaterial = 'charcoal';
+            } else {
+                STATE.currentMaterial = 'concrete';
+            }
         }
 
         // Update material picker cards
@@ -691,13 +779,18 @@
     /**
      * 11. Calculate Specifications & Update UI
      */
-    function calculateSpecifications(cols, rows) {
-        const actualWidth = (cols * STATE.blockSize).toFixed(2);
-        const actualHeight = (rows * STATE.blockSize).toFixed(2);
+    function calculateSpecifications(cols, rows, blockW, blockH) {
+        const bw = blockW || STATE.blockWidth || STATE.blockSize;
+        const bh = blockH || STATE.blockHeight || STATE.blockSize;
+        const pitchX = bw + STATE.mortarGap;
+        const pitchY = bh + STATE.mortarGap;
+        const actualWidth = (cols * pitchX).toFixed(2);
+        const actualHeight = (rows * pitchY).toFixed(2);
         const count = cols * rows;
         const area = (actualWidth * actualHeight).toFixed(2);
         const reserve = Math.ceil(count * 1.05); // +5% safety margin
-        const weight = (reserve * 4.2).toFixed(0); // ~4.2kg per piece
+        const weightPerPc = (bw < 0.15) ? 2.1 : 4.2; // ~2.1kg for 10x20cm, 4.2kg for 20x20cm
+        const weight = (reserve * weightPerPc).toFixed(0);
 
         const unitPrice = STATE.selectedProduct ? STATE.selectedProduct.price : 14000;
         const totalCost = reserve * unitPrice;
@@ -820,6 +913,11 @@
                 break;
             case 'shadow':
                 camera.position.set(STATE.wallWidth * 0.6, 2.2, -STATE.wallWidth * 0.9);
+                break;
+            case 'single':
+                // Close-up 360 degree inspection focused directly on 1 center block
+                camera.position.set(0.18, midY + 0.05, 0.45);
+                controls.target.set(0, midY, 0);
                 break;
         }
         controls.update();
