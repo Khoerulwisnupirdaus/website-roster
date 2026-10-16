@@ -720,14 +720,338 @@
     }
 
     /**
+     * Authentic 1:1 3D Geometry for Roster Motif Kampak (R02)
+     * 10 x 30 x 10 cm vertical block with stepped axe blade & sloping hopper from images/roster_2.jpg
+     */
+    function createAuthenticKampakGeometry(width = 0.10, height = 0.30, depth = 0.10) {
+        const hw = width / 2;
+        const hh = height / 2;
+
+        const rimX = 0.016;
+        const rimY = 0.022;
+        const cavX1 = -hw + rimX; // -0.034
+        const cavX2 = hw - rimX;  // +0.034
+        const cavY1 = -hh + rimY; // -0.128
+        const cavY2 = hh - rimY;  // +0.128
+        const cavH = cavY2 - cavY1; // 0.256m
+        const cavW = cavX2 - cavX1; // 0.068m
+
+        const parts = [];
+
+        // 1. Outer bevelled frame with rectangular cavity
+        const frameShape = new THREE.Shape();
+        frameShape.moveTo(-hw, -hh);
+        frameShape.lineTo(hw, -hh);
+        frameShape.lineTo(hw, hh);
+        frameShape.lineTo(-hw, hh);
+        frameShape.closePath();
+
+        const cavityHole = new THREE.Path();
+        const cr = 0.003;
+        cavityHole.moveTo(cavX1 + cr, cavY1);
+        cavityHole.lineTo(cavX2 - cr, cavY1);
+        cavityHole.quadraticCurveTo(cavX2, cavY1, cavX2, cavY1 + cr);
+        cavityHole.lineTo(cavX2, cavY2 - cr);
+        cavityHole.quadraticCurveTo(cavX2, cavY2, cavX2 - cr, cavY2);
+        cavityHole.lineTo(cavX1 + cr, cavY2);
+        cavityHole.quadraticCurveTo(cavX1, cavY2, cavX1, cavY2 - cr);
+        cavityHole.lineTo(cavX1, cavY1 + cr);
+        cavityHole.quadraticCurveTo(cavX1, cavY1, cavX1 + cr, cavY1);
+        cavityHole.closePath();
+        frameShape.holes.push(cavityHole);
+
+        const frameGeom = new THREE.ExtrudeGeometry(frameShape, {
+            depth: depth,
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: 0.0025,
+            bevelThickness: 0.0025
+        });
+        frameGeom.center();
+        parts.push(frameGeom);
+
+        // 2. Kampak Lower Vertical Blade Block (Mata Kampak)
+        const bladeW = cavW * 0.62; // ~4.2cm wide
+        const bladeH = (cavH / 2) + 0.005;
+        const bladeD = depth - 0.006;
+        const bladeGeom = new THREE.BoxGeometry(bladeW, bladeH, bladeD);
+        bladeGeom.translate(cavX1 + (bladeW / 2), cavY1 + (bladeH / 2), 0);
+        parts.push(bladeGeom);
+
+        // 3. Upper Sloping Hopper Wedge (Corong Miring Atas)
+        const rampShape = new THREE.Shape();
+        rampShape.moveTo(cavX1, cavY2);
+        rampShape.lineTo(cavX1 + bladeW, 0.005);
+        rampShape.lineTo(cavX1, 0.005);
+        rampShape.closePath();
+
+        const rampGeom = new THREE.ExtrudeGeometry(rampShape, {
+            depth: bladeD,
+            bevelEnabled: false
+        });
+        rampGeom.center();
+        rampGeom.translate(cavX1 + (bladeW / 2) - 0.003, cavY2 - (bladeH / 2) + 0.002, 0);
+        parts.push(rampGeom);
+
+        const unified = mergeBufferGeometries(parts);
+        parts.forEach(p => p.dispose());
+        return unified;
+    }
+
+    /**
+     * Authentic 1:1 3D Geometry for Roster Minimalis Strip / S-Baffle (R04)
+     * Recreates the S-curve stepped vertical acoustic blade from images/roster_4.jpg
+     */
+    function createAuthenticMinimalisStripGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const hw = width / 2;
+        const hh = height / 2;
+
+        const rim = 0.024;
+        const cavX1 = -hw + rim;
+        const cavX2 = hw - rim;
+        const cavY1 = -hh + rim;
+        const cavY2 = hh - rim;
+
+        const parts = [];
+
+        // 1. Outer bevelled frame with hollow square cavity
+        const frameShape = new THREE.Shape();
+        frameShape.moveTo(-hw, -hh);
+        frameShape.lineTo(hw, -hh);
+        frameShape.lineTo(hw, hh);
+        frameShape.lineTo(-hw, hh);
+        frameShape.closePath();
+
+        const cavityHole = new THREE.Path();
+        const cr = 0.003;
+        cavityHole.moveTo(cavX1 + cr, cavY1);
+        cavityHole.lineTo(cavX2 - cr, cavY1);
+        cavityHole.quadraticCurveTo(cavX2, cavY1, cavX2, cavY1 + cr);
+        cavityHole.lineTo(cavX2, cavY2 - cr);
+        cavityHole.quadraticCurveTo(cavX2, cavY2, cavX2 - cr, cavY2);
+        cavityHole.lineTo(cavX1 + cr, cavY2);
+        cavityHole.quadraticCurveTo(cavX1, cavY2, cavX1, cavY2 - cr);
+        cavityHole.lineTo(cavX1, cavY1 + cr);
+        cavityHole.quadraticCurveTo(cavX1, cavY1, cavX1 + cr, cavY1);
+        cavityHole.closePath();
+        frameShape.holes.push(cavityHole);
+
+        const frameGeom = new THREE.ExtrudeGeometry(frameShape, {
+            depth: depth,
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: 0.0025,
+            bevelThickness: 0.0025
+        });
+        frameGeom.center();
+        parts.push(frameGeom);
+
+        // 2. The S-Curve Stepped Louver Blade
+        const sBladeShape = new THREE.Shape();
+        const th = 0.014; // 14mm blade thickness
+        const jog = 0.032; // 32mm horizontal offset
+
+        sBladeShape.moveTo(-th / 2, cavY2 + 0.002);
+        sBladeShape.lineTo(th / 2, cavY2 + 0.002);
+        sBladeShape.lineTo(th / 2, 0.024);
+        sBladeShape.lineTo(jog + (th / 2), -0.024);
+        sBladeShape.lineTo(jog + (th / 2), cavY1 - 0.002);
+        sBladeShape.lineTo(jog - (th / 2), cavY1 - 0.002);
+        sBladeShape.lineTo(jog - (th / 2), -0.024);
+        sBladeShape.lineTo(-th / 2, 0.024);
+        sBladeShape.closePath();
+
+        const bladeGeom = new THREE.ExtrudeGeometry(sBladeShape, {
+            depth: depth - 0.004,
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: 0.002,
+            bevelThickness: 0.002
+        });
+        bladeGeom.center();
+        parts.push(bladeGeom);
+
+        const unified = mergeBufferGeometries(parts);
+        parts.forEach(p => p.dispose());
+        return unified;
+    }
+
+    /**
+     * Authentic 1:1 3D Geometry for Roster Sekat Tiga (R28)
+     * Recreates the horizontal acoustic weather louver bar with dual horizontal air slits from images/roster_28.png
+     */
+    function createAuthenticSekatTigaGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const hw = width / 2;
+        const hh = height / 2;
+
+        const rimX = 0.024;
+        const rimY = 0.024;
+        const cavX1 = -hw + rimX;
+        const cavX2 = hw - rimX;
+        const cavY1 = -hh + rimY;
+        const cavY2 = hh - rimY;
+        const cavW = cavX2 - cavX1;
+
+        const parts = [];
+
+        // 1. Outer bevelled frame with hollow cavity
+        const frameShape = new THREE.Shape();
+        frameShape.moveTo(-hw, -hh);
+        frameShape.lineTo(hw, -hh);
+        frameShape.lineTo(hw, hh);
+        frameShape.lineTo(-hw, hh);
+        frameShape.closePath();
+
+        const cavityHole = new THREE.Path();
+        const cr = 0.003;
+        cavityHole.moveTo(cavX1 + cr, cavY1);
+        cavityHole.lineTo(cavX2 - cr, cavY1);
+        cavityHole.quadraticCurveTo(cavX2, cavY1, cavX2, cavY1 + cr);
+        cavityHole.lineTo(cavX2, cavY2 - cr);
+        cavityHole.quadraticCurveTo(cavX2, cavY2, cavX2 - cr, cavY2);
+        cavityHole.lineTo(cavX1 + cr, cavY2);
+        cavityHole.quadraticCurveTo(cavX1, cavY2, cavX1, cavY2 - cr);
+        cavityHole.lineTo(cavX1, cavY1 + cr);
+        cavityHole.quadraticCurveTo(cavX1, cavY1, cavX1 + cr, cavY1);
+        cavityHole.closePath();
+        frameShape.holes.push(cavityHole);
+
+        const frameGeom = new THREE.ExtrudeGeometry(frameShape, {
+            depth: depth,
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: 0.0025,
+            bevelThickness: 0.0025
+        });
+        frameGeom.center();
+        parts.push(frameGeom);
+
+        // 2. Central Chamfered Horizontal Louver Blade
+        const bladeBarShape = new THREE.Shape();
+        const bzFront = (depth / 2) - 0.003;
+        const bzBack = -(depth / 2) + 0.003;
+        const byTop = 0.034;
+        const byBot = -0.034;
+
+        bladeBarShape.moveTo(bzFront, byTop - 0.012);
+        bladeBarShape.lineTo(bzFront, byBot + 0.012);
+        bladeBarShape.lineTo(bzBack, byBot);
+        bladeBarShape.lineTo(bzBack, byTop);
+        bladeBarShape.closePath();
+
+        const barGeom = new THREE.ExtrudeGeometry(bladeBarShape, {
+            depth: cavW + 0.002,
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: 0.002,
+            bevelThickness: 0.002
+        });
+        barGeom.center();
+        barGeom.rotateY(Math.PI / 2);
+        parts.push(barGeom);
+
+        const unified = mergeBufferGeometries(parts);
+        parts.forEach(p => p.dispose());
+        return unified;
+    }
+
+    /**
+     * Authentic 1:1 3D Geometry for Roster Sekat Miring (R23)
+     * Recreates the prominent diagonal acoustic louver baffle blade from images/roster_23.jpg
+     */
+    function createAuthenticSekatMiringGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const hw = width / 2;
+        const hh = height / 2;
+
+        const rim = 0.024;
+        const cavX1 = -hw + rim;
+        const cavX2 = hw - rim;
+        const cavY1 = -hh + rim;
+        const cavY2 = hh - rim;
+        const cavH = cavY2 - cavY1;
+
+        const parts = [];
+
+        // 1. Outer bevelled frame with hollow cavity
+        const frameShape = new THREE.Shape();
+        frameShape.moveTo(-hw, -hh);
+        frameShape.lineTo(hw, -hh);
+        frameShape.lineTo(hw, hh);
+        frameShape.lineTo(-hw, hh);
+        frameShape.closePath();
+
+        const cavityHole = new THREE.Path();
+        const cr = 0.003;
+        cavityHole.moveTo(cavX1 + cr, cavY1);
+        cavityHole.lineTo(cavX2 - cr, cavY1);
+        cavityHole.quadraticCurveTo(cavX2, cavY1, cavX2, cavY1 + cr);
+        cavityHole.lineTo(cavX2, cavY2 - cr);
+        cavityHole.quadraticCurveTo(cavX2, cavY2, cavX2 - cr, cavY2);
+        cavityHole.lineTo(cavX1 + cr, cavY2);
+        cavityHole.quadraticCurveTo(cavX1, cavY2, cavX1, cavY2 - cr);
+        cavityHole.lineTo(cavX1, cavY1 + cr);
+        cavityHole.quadraticCurveTo(cavX1, cavY1, cavX1 + cr, cavY1);
+        cavityHole.closePath();
+        frameShape.holes.push(cavityHole);
+
+        const frameGeom = new THREE.ExtrudeGeometry(frameShape, {
+            depth: depth,
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: 0.0025,
+            bevelThickness: 0.0025
+        });
+        frameGeom.center();
+        parts.push(frameGeom);
+
+        // 2. Slanted Acoustic Louver Baffle Blade in X-Z plane
+        const bladeShape = new THREE.Shape();
+        const bzFront = (depth / 2) - 0.004;
+        const bzBack = -(depth / 2) + 0.004;
+        const th = 0.016; // 16mm thick blade
+
+        bladeShape.moveTo(-0.034, bzFront);
+        bladeShape.lineTo(-0.034 + th, bzFront);
+        bladeShape.lineTo(0.034 + th, bzBack);
+        bladeShape.lineTo(0.034, bzBack);
+        bladeShape.closePath();
+
+        const bladeGeom = new THREE.ExtrudeGeometry(bladeShape, {
+            depth: cavH + 0.002,
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: 0.0015,
+            bevelThickness: 0.0015
+        });
+        bladeGeom.center();
+        bladeGeom.rotateX(Math.PI / 2);
+        parts.push(bladeGeom);
+
+        const unified = mergeBufferGeometries(parts);
+        parts.forEach(p => p.dispose());
+        return unified;
+    }
+
+    /**
      * Registry of products with Authentic 1:1 Physical 3D Void Geometries
      */
     const PRECISION_3D_REGISTRY = {
         'R01': { geomKey: 'hemavara', width: 0.10, height: 0.20, depth: 0.10, defaultMat: 'terracotta' },
+        'R02': { geomKey: 'kampak', width: 0.10, height: 0.30, depth: 0.10, defaultMat: 'concrete' },
+        'R04': { geomKey: 'minimalis_strip', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'terracotta' },
         'R05': { geomKey: 'lingkaran_retro', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' },
         'R07': { geomKey: 'silang_diagonal', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'terracotta' },
         'R11': { geomKey: 'kotak_4', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
-        'R27': { geomKey: 'kotak_polos', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' }
+        'R23': { geomKey: 'sekat_miring', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' },
+        'R27': { geomKey: 'kotak_polos', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R28': { geomKey: 'sekat_tiga', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' }
     };
 
     /**
@@ -750,15 +1074,21 @@
                 geometriesMap[cacheKey] = geom;
                 return geom;
             }
-            case 'lingkaran_retro':
-            case 'R05': {
-                const geom = createAuthenticLingkaranRetroGeometry(width, height, depth);
+            case 'kampak':
+            case 'R02': {
+                const geom = createAuthenticKampakGeometry(width, height, depth);
                 geometriesMap[cacheKey] = geom;
                 return geom;
             }
-            case 'kotak_4':
-            case 'R11': {
-                const geom = createAuthenticKotak4Geometry(width, height, depth);
+            case 'minimalis_strip':
+            case 'R04': {
+                const geom = createAuthenticMinimalisStripGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'lingkaran_retro':
+            case 'R05': {
+                const geom = createAuthenticLingkaranRetroGeometry(width, height, depth);
                 geometriesMap[cacheKey] = geom;
                 return geom;
             }
@@ -768,9 +1098,27 @@
                 geometriesMap[cacheKey] = geom;
                 return geom;
             }
+            case 'kotak_4':
+            case 'R11': {
+                const geom = createAuthenticKotak4Geometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'sekat_miring':
+            case 'R23': {
+                const geom = createAuthenticSekatMiringGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
             case 'kotak_polos':
             case 'R27': {
                 const geom = createAuthenticKotakPolosGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'sekat_tiga':
+            case 'R28': {
+                const geom = createAuthenticSekatTigaGeometry(width, height, depth);
                 geometriesMap[cacheKey] = geom;
                 return geom;
             }
