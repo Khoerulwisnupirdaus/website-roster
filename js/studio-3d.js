@@ -1042,16 +1042,940 @@
     /**
      * Registry of products with Authentic 1:1 Physical 3D Void Geometries
      */
+
+    /**
+     * R09: Roster Segitiga Terbalik (20x20x10 cm)
+     */
+    function createAuthenticSegitigaTerbalikGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const rim = 0.024;
+        const xMin = -hw + rim, xMax = hw - rim;
+        const yMin = -hh + rim, yMax = hh - rim;
+        const midY = (yMin + yMax) / 2;
+
+        const hTop = new THREE.Path();
+        hTop.moveTo(xMin, yMax);
+        hTop.lineTo(xMax, yMax);
+        hTop.lineTo((xMin + xMax) / 2, midY + 0.008);
+        hTop.closePath();
+        shape.holes.push(hTop);
+
+        const hBotL = new THREE.Path();
+        hBotL.moveTo(xMin, yMin);
+        hBotL.lineTo((xMin + xMax) / 2 - 0.008, yMin);
+        hBotL.lineTo(xMin, midY - 0.008);
+        hBotL.closePath();
+        shape.holes.push(hBotL);
+
+        const hBotR = new THREE.Path();
+        hBotR.moveTo(xMax, yMin);
+        hBotR.lineTo(xMax, midY - 0.008);
+        hBotR.lineTo((xMin + xMax) / 2 + 0.008, yMin);
+        hBotR.closePath();
+        shape.holes.push(hBotR);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R19: Roster Segitiga Lancip (20x20x10 cm)
+     */
+    function createAuthenticSegitigaLancipGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const rim = 0.026;
+        const h = new THREE.Path();
+        h.moveTo(0, hh - rim);
+        h.lineTo(hw - rim, -hh + rim);
+        h.lineTo(-hw + rim, -hh + rim);
+        h.closePath();
+        shape.holes.push(h);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R14: Roster Segitiga Prisma 3D (20x20x10 cm)
+     */
+    function createAuthenticPrismaSegitigaGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const rim = 0.024;
+        const barHalf = 0.014;
+        const h1 = new THREE.Path();
+        h1.moveTo(-hw + rim, -hh + rim);
+        h1.lineTo(hw - rim - (barHalf * 2), -hh + rim);
+        h1.lineTo(-hw + rim, hh - rim - (barHalf * 2));
+        h1.closePath();
+        shape.holes.push(h1);
+
+        const h2 = new THREE.Path();
+        h2.moveTo(hw - rim, hh - rim);
+        h2.lineTo(-hw + rim + (barHalf * 2), hh - rim);
+        h2.lineTo(hw - rim, -hh + rim + (barHalf * 2));
+        h2.closePath();
+        shape.holes.push(h2);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R24: Roster Geometris Sudut (20x20x10 cm)
+     */
+    function createAuthenticGeometrisSudutGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const rim = 0.022;
+        const h1 = new THREE.Path();
+        h1.moveTo(-hw + rim, 0.010);
+        h1.lineTo(-0.010, 0.010);
+        h1.lineTo(-0.010, hh - rim);
+        h1.lineTo(-hw + rim, hh - rim);
+        h1.closePath();
+        shape.holes.push(h1);
+
+        const h2 = new THREE.Path();
+        h2.moveTo(0.010, 0.010);
+        h2.lineTo(hw - rim, 0.010);
+        h2.lineTo(hw - rim, hh - rim);
+        h2.lineTo(0.010, hh - rim);
+        h2.closePath();
+        shape.holes.push(h2);
+
+        const h3 = new THREE.Path();
+        h3.moveTo(-hw + rim, -hh + rim);
+        h3.lineTo(hw - rim, -hh + rim);
+        h3.lineTo(hw - rim, -0.010);
+        h3.lineTo(-hw + rim, -0.010);
+        h3.closePath();
+        shape.holes.push(h3);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R29: Roster Z Terbalik (20x20x10 cm)
+     */
+    function createAuthenticZTerbalikGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const rim = 0.024;
+        const hTop = new THREE.Path();
+        hTop.moveTo(-hw + rim, -0.020);
+        hTop.lineTo(hw - rim, hh - rim);
+        hTop.lineTo(-hw + rim, hh - rim);
+        hTop.closePath();
+        shape.holes.push(hTop);
+
+        const hBot = new THREE.Path();
+        hBot.moveTo(hw - rim, 0.020);
+        hBot.lineTo(-hw + rim, -hh + rim);
+        hBot.lineTo(hw - rim, -hh + rim);
+        hBot.closePath();
+        shape.holes.push(hBot);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R30: Roster Bunga Empat Kelopak (20x20x10 cm)
+     */
+    function createAuthenticBunga4KelopakGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const offset = 0.042;
+        const r = 0.028;
+        [[offset, offset], [-offset, offset], [-offset, -offset], [offset, -offset]].forEach(([cx, cy]) => {
+            const h = new THREE.Path();
+            h.absarc(cx, cy, r, 0, Math.PI * 2, true);
+            shape.holes.push(h);
+        });
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R22: Roster Diagonal Asimetris (20x20x10 cm)
+     */
+    function createAuthenticDiagonalAsimetrisGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const rim = 0.024;
+        const h1 = new THREE.Path();
+        h1.moveTo(-hw + rim, -hh + rim);
+        h1.lineTo(0.010, -hh + rim);
+        h1.lineTo(hw - rim, hh - rim);
+        h1.lineTo(-hw + rim, hh - rim);
+        h1.closePath();
+        shape.holes.push(h1);
+
+        const h2 = new THREE.Path();
+        h2.moveTo(0.035, -hh + rim);
+        h2.lineTo(hw - rim, -hh + rim);
+        h2.lineTo(hw - rim, 0.020);
+        h2.closePath();
+        shape.holes.push(h2);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R06: Roster Bintang Segi Empat (20x20x10 cm)
+     */
+    function createAuthenticBintang4Geometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const outerR = 0.068;
+        const innerR = 0.024;
+        const starHole = new THREE.Path();
+        starHole.moveTo(0, outerR);
+        starHole.lineTo(innerR, innerR);
+        starHole.lineTo(outerR, 0);
+        starHole.lineTo(innerR, -innerR);
+        starHole.lineTo(0, -outerR);
+        starHole.lineTo(-innerR, -innerR);
+        starHole.lineTo(-outerR, 0);
+        starHole.lineTo(-innerR, innerR);
+        starHole.closePath();
+        shape.holes.push(starHole);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R08: Roster Lengkung Vertikal (20x20x10 cm)
+     */
+    function createAuthenticLengkungVertikalGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const rim = 0.026;
+        const archW = (hw - rim);
+        const archH = (hh - rim);
+        const archHole = new THREE.Path();
+        archHole.moveTo(-archW, -archH);
+        archHole.lineTo(archW, -archH);
+        archHole.lineTo(archW, 0.020);
+        archHole.absarc(0, 0.020, archW, 0, Math.PI, false);
+        archHole.lineTo(-archW, -archH);
+        archHole.closePath();
+        shape.holes.push(archHole);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R10: Roster Cekung Horizontal (20x20x10 cm)
+     */
+    function createAuthenticCekungHorizontalGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const hw = width / 2;
+        const hh = height / 2;
+        const rim = 0.024;
+        const cavX1 = -hw + rim;
+        const cavX2 = hw - rim;
+        const cavY1 = -hh + rim;
+        const cavY2 = hh - rim;
+        const cavW = cavX2 - cavX1;
+
+        const parts = [];
+
+        const frameShape = new THREE.Shape();
+        frameShape.moveTo(-hw, -hh); frameShape.lineTo(hw, -hh); frameShape.lineTo(hw, hh); frameShape.lineTo(-hw, hh); frameShape.closePath();
+        const cavity = new THREE.Path();
+        cavity.moveTo(cavX1, cavY1); cavity.lineTo(cavX2, cavY1); cavity.lineTo(cavX2, cavY2); cavity.lineTo(cavX1, cavY2); cavity.closePath();
+        frameShape.holes.push(cavity);
+
+        const frameGeom = new THREE.ExtrudeGeometry(frameShape, {
+            depth: depth,
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: 0.0025,
+            bevelThickness: 0.0025
+        });
+        frameGeom.center();
+        parts.push(frameGeom);
+
+        const cylRadius = 0.090;
+        const cylGeom = new THREE.CylinderGeometry(cylRadius, cylRadius, cavW, 24, 1, false, 0, Math.PI * 0.7);
+        cylGeom.rotateZ(Math.PI / 2);
+        cylGeom.rotateY(Math.PI / 2);
+        cylGeom.translate(0, 0, 0.010);
+        parts.push(cylGeom);
+
+        const unified = mergeBufferGeometries(parts);
+        parts.forEach(p => p.dispose());
+        return unified;
+    }
+
+    /**
+     * R17: Roster Bulan Sabit (20x20x10 cm)
+     */
+    function createAuthenticBulanSabitGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const moonHole = new THREE.Path();
+        const rOuter = 0.065;
+        const rInner = 0.055;
+        moonHole.absarc(0, 0, rOuter, -Math.PI * 0.4, Math.PI * 0.4, false);
+        moonHole.absarc(-0.025, 0, rInner, Math.PI * 0.4, -Math.PI * 0.4, true);
+        moonHole.closePath();
+        shape.holes.push(moonHole);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R32: Roster Bintang Putar (20x20x10 cm)
+     */
+    function createAuthenticBintangPutarGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const rMax = 0.065;
+        const rMin = 0.015;
+        for (let i = 0; i < 4; i++) {
+            const angle = (i * Math.PI) / 2;
+            const h = new THREE.Path();
+            h.moveTo(Math.cos(angle) * rMin, Math.sin(angle) * rMin);
+            h.lineTo(Math.cos(angle) * rMax, Math.sin(angle) * rMax);
+            h.lineTo(Math.cos(angle + 0.5) * (rMax * 0.75), Math.sin(angle + 0.5) * (rMax * 0.75));
+            h.closePath();
+            shape.holes.push(h);
+        }
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R15: Roster Bintang Kompleks / Mashrabiya (20x20x10 cm)
+     */
+    function createAuthenticBintangKompleksGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const rOuter = 0.048;
+        const rInner = 0.024;
+        const starHole = new THREE.Path();
+        for (let i = 0; i < 16; i++) {
+            const r = (i % 2 === 0) ? rOuter : rInner;
+            const a = (i * Math.PI) / 8;
+            const x = Math.cos(a) * r;
+            const y = Math.sin(a) * r;
+            if (i === 0) starHole.moveTo(x, y);
+            else starHole.lineTo(x, y);
+        }
+        starHole.closePath();
+        shape.holes.push(starHole);
+
+        const cOffset = 0.058;
+        const cSize = 0.016;
+        [[cOffset, cOffset], [-cOffset, cOffset], [-cOffset, -cOffset], [cOffset, -cOffset]].forEach(([cx, cy]) => {
+            const ch = new THREE.Path();
+            ch.moveTo(cx - cSize, cy - cSize);
+            ch.lineTo(cx + cSize, cy - cSize);
+            ch.lineTo(cx + cSize, cy + cSize);
+            ch.lineTo(cx - cSize, cy + cSize);
+            ch.closePath();
+            shape.holes.push(ch);
+        });
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R18 & R31: Roster Motif Labirin & Labirin Klasik (20x20x10 cm)
+     */
+    function createAuthenticLabirinGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const slotW = 0.018;
+        const h1 = new THREE.Path();
+        h1.moveTo(-0.065, 0.065);
+        h1.lineTo(0.065, 0.065);
+        h1.lineTo(0.065, 0.010);
+        h1.lineTo(0.065 - slotW, 0.010);
+        h1.lineTo(0.065 - slotW, 0.065 - slotW);
+        h1.lineTo(-0.065, 0.065 - slotW);
+        h1.closePath();
+        shape.holes.push(h1);
+
+        const h2 = new THREE.Path();
+        h2.moveTo(0.065, -0.065);
+        h2.lineTo(-0.065, -0.065);
+        h2.lineTo(-0.065, -0.010);
+        h2.lineTo(-0.065 + slotW, -0.010);
+        h2.lineTo(-0.065 + slotW, -0.065 + slotW);
+        h2.lineTo(0.065, -0.065 + slotW);
+        h2.closePath();
+        shape.holes.push(h2);
+
+        const h3 = new THREE.Path();
+        h3.moveTo(-0.025, -0.025);
+        h3.lineTo(0.025, -0.025);
+        h3.lineTo(0.025, 0.025);
+        h3.lineTo(-0.025, 0.025);
+        h3.closePath();
+        shape.holes.push(h3);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R26: Roster Kotak Berlapis (20x20x10 cm)
+     */
+    function createAuthenticKotakBerlapisGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const s = 0.024;
+        const d = 0.045;
+        [[d, d], [-d, d], [-d, -d], [d, -d]].forEach(([cx, cy]) => {
+            const h = new THREE.Path();
+            h.moveTo(cx - s, cy - s);
+            h.lineTo(cx + s, cy - s);
+            h.lineTo(cx + s, cy + s);
+            h.lineTo(cx - s, cy + s);
+            h.closePath();
+            shape.holes.push(h);
+        });
+
+        const cs = 0.020;
+        const ch = new THREE.Path();
+        ch.moveTo(-cs, -cs); ch.lineTo(cs, -cs); ch.lineTo(cs, cs); ch.lineTo(-cs, cs); ch.closePath();
+        shape.holes.push(ch);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R33: Roster Balok Asimetris Komposisi (20x20x10 cm)
+     */
+    function createAuthenticBalokAsimetrisGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const rim = 0.022;
+        const h1 = new THREE.Path();
+        h1.moveTo(-hw + rim, 0.015);
+        h1.lineTo(hw - rim, 0.015);
+        h1.lineTo(hw - rim, hh - rim);
+        h1.lineTo(-hw + rim, hh - rim);
+        h1.closePath();
+        shape.holes.push(h1);
+
+        const h2 = new THREE.Path();
+        h2.moveTo(-hw + rim, -hh + rim);
+        h2.lineTo(-0.015, -hh + rim);
+        h2.lineTo(-0.015, -0.015);
+        h2.lineTo(-hw + rim, -0.015);
+        h2.closePath();
+        shape.holes.push(h2);
+
+        const h3 = new THREE.Path();
+        h3.moveTo(0.015, -hh + rim);
+        h3.lineTo(hw - rim, -hh + rim);
+        h3.lineTo(hw - rim, -0.015);
+        h3.lineTo(0.015, -0.015);
+        h3.closePath();
+        shape.holes.push(h3);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R36: Roster Beton Geometris Konsentris (Flagship) (20x20x10 cm)
+     */
+    function createAuthenticKonsentrisGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.005;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const outerCircle = new THREE.Path();
+        outerCircle.absarc(0, 0, 0.065, 0, Math.PI * 2, true);
+        shape.holes.push(outerCircle);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 3,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R16 & R21: Roster Piramida Abu-abu / Piramida Persegi (20x20x10 cm)
+     */
+    function createAuthenticPiramidaGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const r = 0.045;
+        const h = new THREE.Path();
+        h.moveTo(0, r); h.lineTo(r, 0); h.lineTo(0, -r); h.lineTo(-r, 0); h.closePath();
+        shape.holes.push(h);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: 0.008,
+            bevelThickness: 0.012
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R25: Roster Prisma Tengah (20x20x10 cm)
+     */
+    function createAuthenticPrismaTengahGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const rim = 0.024;
+        const d = 0.050;
+        const h1 = new THREE.Path();
+        h1.moveTo(-hw + rim, hh - rim); h1.lineTo(-d, hh - rim); h1.lineTo(-hw + rim, d); h1.closePath();
+        shape.holes.push(h1);
+
+        const h2 = new THREE.Path();
+        h2.moveTo(hw - rim, hh - rim); h2.lineTo(hw - rim, d); h2.lineTo(d, hh - rim); h2.closePath();
+        shape.holes.push(h2);
+
+        const h3 = new THREE.Path();
+        h3.moveTo(hw - rim, -hh + rim); h3.lineTo(d, -hh + rim); h3.lineTo(hw - rim, -d); h3.closePath();
+        shape.holes.push(h3);
+
+        const h4 = new THREE.Path();
+        h4.moveTo(-hw + rim, -hh + rim); h4.lineTo(-hw + rim, -d); h4.lineTo(-d, -hh + rim); h4.closePath();
+        shape.holes.push(h4);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R20: Roster Kubik Bulat (20x20x10 cm)
+     */
+    function createAuthenticKubikBulatGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.010;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const hole = new THREE.Path();
+        hole.absarc(0, 0, 0.055, 0, Math.PI * 2, true);
+        shape.holes.push(hole);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 4,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R03: Roster Motif Daun (20x20x10 cm)
+     */
+    function createAuthenticMotifDaunGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const hLeft = new THREE.Path();
+        hLeft.moveTo(-0.020, 0.065);
+        hLeft.quadraticCurveTo(-0.065, 0.035, -0.065, -0.055);
+        hLeft.lineTo(-0.020, -0.055);
+        hLeft.quadraticCurveTo(-0.035, 0.000, -0.020, 0.065);
+        hLeft.closePath();
+        shape.holes.push(hLeft);
+
+        const hRight = new THREE.Path();
+        hRight.moveTo(0.020, 0.065);
+        hRight.quadraticCurveTo(0.065, 0.035, 0.065, -0.055);
+        hRight.lineTo(0.020, -0.055);
+        hRight.quadraticCurveTo(0.035, 0.000, 0.020, 0.065);
+        hRight.closePath();
+        shape.holes.push(hRight);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R12: Roster Motif Bunga Bulat (20x20x10 cm)
+     */
+    function createAuthenticBungaBulatGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const offset = 0.040;
+        const rPetal = 0.024;
+        [[0, offset], [offset, 0], [0, -offset], [-offset, 0]].forEach(([cx, cy]) => {
+            const h = new THREE.Path();
+            h.absarc(cx, cy, rPetal, 0, Math.PI * 2, true);
+            shape.holes.push(h);
+        });
+
+        const ch = new THREE.Path();
+        ch.absarc(0, 0, 0.012, 0, Math.PI * 2, true);
+        shape.holes.push(ch);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R13: Roster Motif Daun Tetesan Air (20x20x10 cm)
+     */
+    function createAuthenticTetesAirGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const h1 = new THREE.Path();
+        h1.moveTo(-0.035, 0.055);
+        h1.quadraticCurveTo(-0.065, 0.010, -0.035, -0.040);
+        h1.quadraticCurveTo(-0.005, 0.010, -0.035, 0.055);
+        h1.closePath();
+        shape.holes.push(h1);
+
+        const h2 = new THREE.Path();
+        h2.moveTo(0.035, -0.055);
+        h2.quadraticCurveTo(0.065, -0.010, 0.035, 0.040);
+        h2.quadraticCurveTo(0.005, -0.010, 0.035, -0.055);
+        h2.closePath();
+        shape.holes.push(h2);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * R37: Roster Terakota Mandala Flora (Flagship) (20x20x10 cm)
+     */
+    function createAuthenticMandalaFloraGeometry(width = 0.20, height = 0.20, depth = 0.10) {
+        const bevel = 0.0025;
+        const hw = (width / 2) - bevel;
+        const hh = (height / 2) - bevel;
+        const shape = new THREE.Shape();
+        shape.moveTo(-hw, -hh); shape.lineTo(hw, -hh); shape.lineTo(hw, hh); shape.lineTo(-hw, hh); shape.closePath();
+
+        const rPetal = 0.046;
+        for (let i = 0; i < 8; i++) {
+            const a = (i * Math.PI) / 4;
+            const cx = Math.cos(a) * rPetal;
+            const cy = Math.sin(a) * rPetal;
+            const h = new THREE.Path();
+            h.absarc(cx, cy, 0.014, 0, Math.PI * 2, true);
+            shape.holes.push(h);
+        }
+
+        const centerHole = new THREE.Path();
+        centerHole.absarc(0, 0, 0.020, 0, Math.PI * 2, true);
+        shape.holes.push(centerHole);
+
+        const geom = new THREE.ExtrudeGeometry(shape, {
+            depth: depth - (bevel * 2),
+            bevelEnabled: true,
+            bevelSegments: 2,
+            steps: 1,
+            bevelSize: bevel,
+            bevelThickness: bevel
+        });
+        geom.center();
+        return geom;
+    }
+
+    /**
+     * Registry of products with Authentic 1:1 Physical 3D Void Geometries (All 35 Catalog Products)
+     */
     const PRECISION_3D_REGISTRY = {
         'R01': { geomKey: 'hemavara', width: 0.10, height: 0.20, depth: 0.10, defaultMat: 'terracotta' },
         'R02': { geomKey: 'kampak', width: 0.10, height: 0.30, depth: 0.10, defaultMat: 'concrete' },
+        'R03': { geomKey: 'motif_daun', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
         'R04': { geomKey: 'minimalis_strip', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'terracotta' },
         'R05': { geomKey: 'lingkaran_retro', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' },
+        'R06': { geomKey: 'bintang_4', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
         'R07': { geomKey: 'silang_diagonal', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'terracotta' },
+        'R08': { geomKey: 'lengkung_vertikal', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R09': { geomKey: 'segitiga_terbalik', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R10': { geomKey: 'cekung_horizontal', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' },
         'R11': { geomKey: 'kotak_4', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R12': { geomKey: 'bunga_bulat', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R13': { geomKey: 'tetes_air', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R14': { geomKey: 'prisma_segitiga', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R15': { geomKey: 'bintang_kompleks', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' },
+        'R16': { geomKey: 'piramida', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R17': { geomKey: 'bulan_sabit', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R18': { geomKey: 'labirin', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R19': { geomKey: 'segitiga_lancip', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'terracotta' },
+        'R20': { geomKey: 'kubik_bulat', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R21': { geomKey: 'piramida', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R22': { geomKey: 'diagonal_asimetris', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
         'R23': { geomKey: 'sekat_miring', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' },
+        'R24': { geomKey: 'geometris_sudut', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R25': { geomKey: 'prisma_tengah', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R26': { geomKey: 'kotak_berlapis', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
         'R27': { geomKey: 'kotak_polos', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
-        'R28': { geomKey: 'sekat_tiga', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' }
+        'R28': { geomKey: 'sekat_tiga', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' },
+        'R29': { geomKey: 'z_terbalik', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' },
+        'R30': { geomKey: 'bunga_4_kelopak', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' },
+        'R31': { geomKey: 'labirin', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R32': { geomKey: 'bintang_putar', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'white' },
+        'R33': { geomKey: 'balok_asimetris', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R36': { geomKey: 'konsentris', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'concrete' },
+        'R37': { geomKey: 'mandala_flora', width: 0.20, height: 0.20, depth: 0.10, defaultMat: 'terracotta' }
     };
 
     /**
@@ -1068,7 +1992,7 @@
         }
 
         switch (motifType) {
-            case 'hemavara':
+             case 'hemavara':
             case 'R01': {
                 const geom = createAuthenticHemavaraGeometry(width, height, depth);
                 geometriesMap[cacheKey] = geom;
@@ -1077,6 +2001,12 @@
             case 'kampak':
             case 'R02': {
                 const geom = createAuthenticKampakGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'motif_daun':
+            case 'R03': {
+                const geom = createAuthenticMotifDaunGeometry(width, height, depth);
                 geometriesMap[cacheKey] = geom;
                 return geom;
             }
@@ -1092,9 +2022,33 @@
                 geometriesMap[cacheKey] = geom;
                 return geom;
             }
+            case 'bintang_4':
+            case 'R06': {
+                const geom = createAuthenticBintang4Geometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
             case 'silang_diagonal':
             case 'R07': {
                 const geom = createAuthenticSilangGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'lengkung_vertikal':
+            case 'R08': {
+                const geom = createAuthenticLengkungVertikalGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'segitiga_terbalik':
+            case 'R09': {
+                const geom = createAuthenticSegitigaTerbalikGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'cekung_horizontal':
+            case 'R10': {
+                const geom = createAuthenticCekungHorizontalGeometry(width, height, depth);
                 geometriesMap[cacheKey] = geom;
                 return geom;
             }
@@ -1104,9 +2058,89 @@
                 geometriesMap[cacheKey] = geom;
                 return geom;
             }
+            case 'bunga_bulat':
+            case 'R12': {
+                const geom = createAuthenticBungaBulatGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'tetes_air':
+            case 'R13': {
+                const geom = createAuthenticTetesAirGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'prisma_segitiga':
+            case 'R14': {
+                const geom = createAuthenticPrismaSegitigaGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'bintang_kompleks':
+            case 'R15': {
+                const geom = createAuthenticBintangKompleksGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'piramida':
+            case 'R16':
+            case 'R21': {
+                const geom = createAuthenticPiramidaGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'bulan_sabit':
+            case 'R17': {
+                const geom = createAuthenticBulanSabitGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'labirin':
+            case 'R18':
+            case 'R31': {
+                const geom = createAuthenticLabirinGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'segitiga_lancip':
+            case 'R19': {
+                const geom = createAuthenticSegitigaLancipGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'kubik_bulat':
+            case 'R20': {
+                const geom = createAuthenticKubikBulatGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'diagonal_asimetris':
+            case 'R22': {
+                const geom = createAuthenticDiagonalAsimetrisGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
             case 'sekat_miring':
             case 'R23': {
                 const geom = createAuthenticSekatMiringGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'geometris_sudut':
+            case 'R24': {
+                const geom = createAuthenticGeometrisSudutGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'prisma_tengah':
+            case 'R25': {
+                const geom = createAuthenticPrismaTengahGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'kotak_berlapis':
+            case 'R26': {
+                const geom = createAuthenticKotakBerlapisGeometry(width, height, depth);
                 geometriesMap[cacheKey] = geom;
                 return geom;
             }
@@ -1119,6 +2153,42 @@
             case 'sekat_tiga':
             case 'R28': {
                 const geom = createAuthenticSekatTigaGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'z_terbalik':
+            case 'R29': {
+                const geom = createAuthenticZTerbalikGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'bunga_4_kelopak':
+            case 'R30': {
+                const geom = createAuthenticBunga4KelopakGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'bintang_putar':
+            case 'R32': {
+                const geom = createAuthenticBintangPutarGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'balok_asimetris':
+            case 'R33': {
+                const geom = createAuthenticBalokAsimetrisGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'konsentris':
+            case 'R36': {
+                const geom = createAuthenticKonsentrisGeometry(width, height, depth);
+                geometriesMap[cacheKey] = geom;
+                return geom;
+            }
+            case 'mandala_flora':
+            case 'R37': {
+                const geom = createAuthenticMandalaFloraGeometry(width, height, depth);
                 geometriesMap[cacheKey] = geom;
                 return geom;
             }

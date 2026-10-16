@@ -45,8 +45,8 @@ function runTier1Tests(harness) {
       harness.assertIncludes(title, 'Scarlet Roster', 'Title must mention "Scarlet Roster"');
     });
 
-    // AC-1.2: Catalog Inventory Count (Exactly 37 items)
-    harness.test('Catalog Inventory Count (Exactly 37 distinct products)', () => {
+    // AC-1.2: Catalog Inventory Count (Exactly 35 items: 33 numbered + 2 flagship)
+    harness.test('Catalog Inventory Count (Exactly 35 distinct products)', () => {
       // Products can be represented as .product-card or items registered in window.CATALOG_PRODUCTS
       const domProductCards = Array.from(document.querySelectorAll('.product-card'));
       const windowCatalog = window.CATALOG_PRODUCTS || [];
